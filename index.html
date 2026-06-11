@@ -36,7 +36,6 @@
     -webkit-font-smoothing:antialiased;
     overflow-x:hidden;
   }
-  /* ambient background */
   body::before{
     content:"";
     position:fixed;inset:0;z-index:-2;
@@ -65,12 +64,30 @@
   .nav-in{display:flex;align-items:center;justify-content:space-between;height:64px}
   .brand{display:flex;align-items:center;gap:11px;font-weight:600;letter-spacing:.2px}
   .brand .mark{width:30px;height:30px;flex:none}
+  .nav-right{display:flex;align-items:center;gap:24px}
   .nav-links{display:flex;gap:30px}
   .nav-links a{color:var(--txt-soft);font-size:14px;font-weight:500;transition:color .2s;position:relative}
   .nav-links a:hover{color:var(--txt)}
   .nav-links a::after{content:"";position:absolute;left:0;bottom:-6px;height:2px;width:0;background:var(--accent);transition:width .25s}
   .nav-links a:hover::after{width:100%}
   @media(max-width:680px){.nav-links{display:none}}
+
+  /* LANGUAGE SWITCHER */
+  .lang-switcher{
+    display:flex;align-items:center;gap:4px;
+    background:var(--surface);border:1px solid var(--line-strong);
+    border-radius:999px;padding:4px;flex:none;
+  }
+  .lang-btn{
+    display:flex;align-items:center;gap:6px;
+    padding:5px 11px;border-radius:999px;
+    font-size:13px;font-weight:500;cursor:pointer;
+    transition:background .2s,color .2s;color:var(--txt-dim);
+    background:transparent;border:none;
+  }
+  .lang-btn.active{background:var(--accent);color:#04201d}
+  .lang-btn:not(.active):hover{color:var(--txt)}
+  .lang-flag-sm{font-size:14px}
 
   /* HERO */
   header{position:relative;padding:96px 0 84px}
@@ -196,11 +213,21 @@
       </svg>
       <span>Iacob Mardari</span>
     </div>
-    <div class="nav-links">
-      <a href="#despre">Despre</a>
-      <a href="#parcurs">Parcurs</a>
-      <a href="#focus">Domenii</a>
-      <a href="#contact">Contact</a>
+    <div class="nav-right">
+      <div class="nav-links">
+        <a href="#despre" data-i18n="nav.about"></a>
+        <a href="#parcurs" data-i18n="nav.path"></a>
+        <a href="#focus" data-i18n="nav.focus"></a>
+        <a href="#contact" data-i18n="nav.contact"></a>
+      </div>
+      <div class="lang-switcher" role="group" aria-label="Language / Limbă">
+        <button class="lang-btn" id="btn-ro" onclick="setLang('ro')" aria-label="Română">
+          <span class="lang-flag-sm">🇷🇴</span> RO
+        </button>
+        <button class="lang-btn" id="btn-fr" onclick="setLang('fr')" aria-label="Français">
+          <span class="lang-flag-sm">🇫🇷</span> FR
+        </button>
+      </div>
     </div>
   </div>
 </nav>
@@ -222,47 +249,47 @@
   </svg>
   <div class="wrap">
     <div class="reveal">
-      <span class="eyebrow"><span class="dot"></span>Viitor medic oftalmolog</span>
+      <span class="eyebrow"><span class="dot"></span><span data-i18n="hero.eyebrow"></span></span>
     </div>
-    <h1 class="reveal">Iacob Mardari<br><span class="grad">pasiune pentru<br>oftalmologie</span></h1>
-    <p class="lede reveal">Aspirant în medicina ochiului — fascinat de precizia, tehnologia și impactul uman din spatele fiecărui diagnostic vizual. Primul pas făcut deja: un internship practic într-un cabinet de oftalmologie din Cluj.</p>
+    <h1 class="reveal">Iacob Mardari<br><span class="grad" data-i18n="hero.grad"></span></h1>
+    <p class="lede reveal" data-i18n="hero.lede"></p>
     <div class="hero-cta reveal">
       <a class="btn btn-primary" href="#contact">
-        Hai să vorbim
+        <span data-i18n="hero.cta1"></span>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
-      <a class="btn btn-ghost" href="#parcurs">Vezi parcursul</a>
+      <a class="btn btn-ghost" href="#parcurs" data-i18n="hero.cta2"></a>
     </div>
   </div>
 </header>
 
 <section id="despre" class="about">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="sec-num">01</span><h2>Despre mine</h2></div>
+    <div class="sec-head reveal"><span class="sec-num">01</span><h2 data-i18n="about.title"></h2></div>
     <div class="reveal">
-      <p>Mă numesc <strong>Iacob Mardari</strong> și oftalmologia este domeniul care mă atrage cel mai mult. Mă fascinează cum o specialitate medicală îmbină <strong>precizia chirurgicală</strong>, tehnologia de ultimă generație și o legătură directă, profund umană cu pacientul — redarea sau protejarea unuia dintre cele mai prețioase simțuri ale noastre.</p>
-      <p>În <strong>iunie 2026</strong> am făcut primul pas concret în această direcție: un internship la un cabinet de oftalmologie din <strong>Cluj</strong>, unde am observat de aproape munca de zi cu zi a unui oftalmolog. Tot atunci am realizat și o <strong>prezentare despre meseria de oftalmolog</strong>, ca să înțeleg și să transmit mai departe ce înseamnă cu adevărat această profesie.</p>
+      <p data-i18n="about.p1"></p>
+      <p data-i18n="about.p2"></p>
     </div>
   </div>
 </section>
 
 <section id="parcurs">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="sec-num">02</span><h2>Parcurs</h2></div>
+    <div class="sec-head reveal"><span class="sec-num">02</span><h2 data-i18n="path.title"></h2></div>
     <div class="timeline">
       <div class="t-item reveal">
         <span class="node"></span>
-        <div class="t-date">Martie 2026</div>
-        <div class="t-title">Prezentare — „Meseria de oftalmolog"</div>
-        <div class="t-org">Proiect personal</div>
-        <div class="t-desc">Documentare și prezentare despre rolul, responsabilitățile și provocările profesiei de oftalmolog — de la formarea medicală până la actul clinic și relația cu pacientul.</div>
+        <div class="t-date" data-i18n="path.item1.date"></div>
+        <div class="t-title" data-i18n="path.item1.title"></div>
+        <div class="t-org" data-i18n="path.item1.org"></div>
+        <div class="t-desc" data-i18n="path.item1.desc"></div>
       </div>
       <div class="t-item reveal">
         <span class="node"></span>
-        <div class="t-date">Iunie 2026</div>
-        <div class="t-title">Internship — Cabinet de oftalmologie</div>
-        <div class="t-org">Cluj-Napoca, România</div>
-        <div class="t-desc">Stagiu practic într-un cabinet de oftalmologie: observarea consultațiilor, familiarizarea cu aparatura de diagnostic și cu fluxul real de lucru al unui medic oftalmolog. În urma acestei experiențe, susțin o prezentare orală despre stagiu și lecțiile învățate.</div>
+        <div class="t-date" data-i18n="path.item2.date"></div>
+        <div class="t-title" data-i18n="path.item2.title"></div>
+        <div class="t-org" data-i18n="path.item2.org"></div>
+        <div class="t-desc" data-i18n="path.item2.desc"></div>
       </div>
     </div>
   </div>
@@ -270,27 +297,27 @@
 
 <section id="focus">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="sec-num">03</span><h2>Ce mă atrage în oftalmologie</h2></div>
+    <div class="sec-head reveal"><span class="sec-num">03</span><h2 data-i18n="focus.title"></h2></div>
     <div class="grid">
       <div class="card reveal">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
-        <h3>Diagnostic vizual</h3>
-        <p>Capacitatea de a descifra, prin examinare atentă, ce nu se vede cu ochiul liber — de la fund de ochi la presiune intraoculară.</p>
+        <h3 data-i18n="focus.card1.title"></h3>
+        <p data-i18n="focus.card1.desc"></p>
       </div>
       <div class="card reveal">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/><circle cx="12" cy="12" r="3"/></svg>
-        <h3>Tehnologie de vârf</h3>
-        <p>Lasere, microscoape chirurgicale și imagistică avansată — oftalmologia e una dintre cele mai tehnologizate specialități medicale.</p>
+        <h3 data-i18n="focus.card2.title"></h3>
+        <p data-i18n="focus.card2.desc"></p>
       </div>
       <div class="card reveal">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>
-        <h3>Impact uman</h3>
-        <p>A reda sau a proteja vederea cuiva înseamnă a-i schimba viața — un rezultat concret, vizibil și profund personal.</p>
+        <h3 data-i18n="focus.card3.title"></h3>
+        <p data-i18n="focus.card3.desc"></p>
       </div>
       <div class="card reveal">
         <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-        <h3>Precizie & rigoare</h3>
-        <p>Fiecare gest contează la milimetru. Disciplina și atenția la detaliu sunt valorile care mă atrag spre această meserie.</p>
+        <h3 data-i18n="focus.card4.title"></h3>
+        <p data-i18n="focus.card4.desc"></p>
       </div>
     </div>
   </div>
@@ -298,25 +325,24 @@
 
 <section id="skills">
   <div class="wrap">
-    <div class="sec-head reveal"><span class="sec-num">04</span><h2>Interese & calități</h2></div>
+    <div class="sec-head reveal"><span class="sec-num">04</span><h2 data-i18n="skills.title"></h2></div>
     <div class="chips reveal">
-      <span class="chip">Responsabil</span>
-      <span class="chip">Disciplinat</span>
-      <span class="chip">Atenție la detaliu</span>
-      <span class="chip">Oftalmologie</span>
-      <span class="chip">Diagnostic clinic</span>
-      <span class="chip">Aparatură medicală</span>
-      <span class="chip">Comunicare cu pacientul</span>
-      <span class="chip">Documentare medicală</span>
-      <span class="chip">Curiozitate științifică</span>
+      <span class="chip" data-i18n="skills.chip1"></span>
+      <span class="chip" data-i18n="skills.chip2"></span>
+      <span class="chip" data-i18n="skills.chip3"></span>
+      <span class="chip" data-i18n="skills.chip4"></span>
+      <span class="chip" data-i18n="skills.chip5"></span>
+      <span class="chip" data-i18n="skills.chip6"></span>
+      <span class="chip" data-i18n="skills.chip7"></span>
+      <span class="chip" data-i18n="skills.chip8"></span>
+      <span class="chip" data-i18n="skills.chip9"></span>
     </div>
-
     <div class="lang-block reveal">
-      <h3 class="lang-title">Limbi vorbite</h3>
+      <h3 class="lang-title" data-i18n="skills.langsTitle"></h3>
       <div class="langs">
-        <div class="lang"><span class="lang-flag">🇷🇴</span><span class="lang-name">Română</span></div>
-        <div class="lang"><span class="lang-flag">🇬🇧</span><span class="lang-name">Engleză</span></div>
-        <div class="lang"><span class="lang-flag">🇫🇷</span><span class="lang-name">Franceză</span></div>
+        <div class="lang"><span class="lang-flag">🇷🇴</span><span class="lang-name" data-i18n="skills.lang1"></span></div>
+        <div class="lang"><span class="lang-flag">🇬🇧</span><span class="lang-name" data-i18n="skills.lang2"></span></div>
+        <div class="lang"><span class="lang-flag">🇫🇷</span><span class="lang-name" data-i18n="skills.lang3"></span></div>
       </div>
     </div>
   </div>
@@ -325,8 +351,8 @@
 <section id="contact">
   <div class="wrap reveal">
     <div class="contact-card">
-      <h2>Să luăm legătura</h2>
-      <p>Deschis la oportunități de învățare, mentorat și colaborare în domeniul oftalmologiei.</p>
+      <h2 data-i18n="contact.title"></h2>
+      <p data-i18n="contact.desc"></p>
       <div class="contact-links">
         <a class="clink" href="mailto:mardariiacob2@gmail.com">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
@@ -343,16 +369,167 @@
 
 <footer>
   <div class="wrap">
-    © <span id="yr"></span> Iacob Mardari · Construit cu <span class="heart">♥</span> pentru oftalmologie
+    © <span id="yr"></span> Iacob Mardari · <span data-i18n="footer.built"></span> <span class="heart">♥</span> <span data-i18n="footer.for"></span>
   </div>
 </footer>
 
 <script>
+  const translations = {
+    ro: {
+      "nav.about": "Despre",
+      "nav.path": "Parcurs",
+      "nav.focus": "Domenii",
+      "nav.contact": "Contact",
+      "hero.eyebrow": "Viitor medic oftalmolog",
+      "hero.grad": "pasiune pentru\noftalmologie",
+      "hero.lede": "Aspirant în medicina ochiului — fascinat de precizia, tehnologia și impactul uman din spatele fiecărui diagnostic vizual. Primul pas făcut deja: un internship practic într-un cabinet de oftalmologie din Cluj.",
+      "hero.cta1": "Hai să vorbim",
+      "hero.cta2": "Vezi parcursul",
+      "about.title": "Despre mine",
+      "about.p1": "Mă numesc <strong>Iacob Mardari</strong> și oftalmologia este domeniul care mă atrage cel mai mult. Mă fascinează cum o specialitate medicală îmbină <strong>precizia chirurgicală</strong>, tehnologia de ultimă generație și o legătură directă, profund umană cu pacientul — redarea sau protejarea unuia dintre cele mai prețioase simțuri ale noastre.",
+      "about.p2": "În <strong>iunie 2026</strong> am făcut primul pas concret în această direcție: un internship la un cabinet de oftalmologie din <strong>Cluj</strong>, unde am observat de aproape munca de zi cu zi a unui oftalmolog. Tot atunci am realizat și o <strong>prezentare despre meseria de oftalmolog</strong>, ca să înțeleg și să transmit mai departe ce înseamnă cu adevărat această profesie.",
+      "path.title": "Parcurs",
+      "path.item1.date": "Martie 2026",
+      "path.item1.title": "Prezentare — „Meseria de oftalmolog"",
+      "path.item1.org": "Proiect personal",
+      "path.item1.desc": "Documentare și prezentare despre rolul, responsabilitățile și provocările profesiei de oftalmolog — de la formarea medicală până la actul clinic și relația cu pacientul.",
+      "path.item2.date": "Iunie 2026",
+      "path.item2.title": "Internship — Cabinet de oftalmologie",
+      "path.item2.org": "Cluj-Napoca, România",
+      "path.item2.desc": "Stagiu practic într-un cabinet de oftalmologie: observarea consultațiilor, familiarizarea cu aparatura de diagnostic și cu fluxul real de lucru al unui medic oftalmolog. În urma acestei experiențe, susțin o prezentare orală despre stagiu și lecțiile învățate.",
+      "focus.title": "Ce mă atrage în oftalmologie",
+      "focus.card1.title": "Diagnostic vizual",
+      "focus.card1.desc": "Capacitatea de a descifra, prin examinare atentă, ce nu se vede cu ochiul liber — de la fund de ochi la presiune intraoculară.",
+      "focus.card2.title": "Tehnologie de vârf",
+      "focus.card2.desc": "Lasere, microscoape chirurgicale și imagistică avansată — oftalmologia e una dintre cele mai tehnologizate specialități medicale.",
+      "focus.card3.title": "Impact uman",
+      "focus.card3.desc": "A reda sau a proteja vederea cuiva înseamnă a-i schimba viața — un rezultat concret, vizibil și profund personal.",
+      "focus.card4.title": "Precizie & rigoare",
+      "focus.card4.desc": "Fiecare gest contează la milimetru. Disciplina și atenția la detaliu sunt valorile care mă atrag spre această meserie.",
+      "skills.title": "Interese & calități",
+      "skills.chip1": "Responsabil",
+      "skills.chip2": "Disciplinat",
+      "skills.chip3": "Atenție la detaliu",
+      "skills.chip4": "Oftalmologie",
+      "skills.chip5": "Diagnostic clinic",
+      "skills.chip6": "Aparatură medicală",
+      "skills.chip7": "Comunicare cu pacientul",
+      "skills.chip8": "Documentare medicală",
+      "skills.chip9": "Curiozitate științifică",
+      "skills.langsTitle": "Limbi vorbite",
+      "skills.lang1": "Română",
+      "skills.lang2": "Engleză",
+      "skills.lang3": "Franceză",
+      "contact.title": "Să luăm legătura",
+      "contact.desc": "Deschis la oportunități de învățare, mentorat și colaborare în domeniul oftalmologiei.",
+      "footer.built": "Construit cu",
+      "footer.for": "pentru oftalmologie"
+    },
+    fr: {
+      "nav.about": "À propos",
+      "nav.path": "Parcours",
+      "nav.focus": "Domaines",
+      "nav.contact": "Contact",
+      "hero.eyebrow": "Futur médecin ophtalmologiste",
+      "hero.grad": "passion pour\nl'ophtalmologie",
+      "hero.lede": "Aspirant en médecine oculaire — fasciné par la précision, la technologie et l'impact humain derrière chaque diagnostic visuel. Premier pas déjà franchi : un stage pratique dans un cabinet d'ophtalmologie à Cluj.",
+      "hero.cta1": "Parlons-en",
+      "hero.cta2": "Voir le parcours",
+      "about.title": "À propos de moi",
+      "about.p1": "Je m'appelle <strong>Iacob Mardari</strong> et l'ophtalmologie est le domaine qui m'attire le plus. Je suis fasciné par la façon dont cette spécialité médicale combine <strong>la précision chirurgicale</strong>, la technologie de pointe et un lien direct, profondément humain avec le patient — redonner ou protéger l'un de nos sens les plus précieux.",
+      "about.p2": "En <strong>juin 2026</strong>, j'ai fait le premier pas concret dans cette direction : un stage dans un cabinet d'ophtalmologie à <strong>Cluj</strong>, où j'ai observé de près le travail quotidien d'un ophtalmologiste. J'ai également réalisé une <strong>présentation sur le métier d'ophtalmologiste</strong>, pour mieux comprendre et transmettre ce que cette profession représente vraiment.",
+      "path.title": "Parcours",
+      "path.item1.date": "Mars 2026",
+      "path.item1.title": "Présentation — « Le métier d'ophtalmologiste »",
+      "path.item1.org": "Projet personnel",
+      "path.item1.desc": "Documentation et présentation sur le rôle, les responsabilités et les défis du métier d'ophtalmologiste — de la formation médicale à l'acte clinique et la relation avec le patient.",
+      "path.item2.date": "Juin 2026",
+      "path.item2.title": "Stage — Cabinet d'ophtalmologie",
+      "path.item2.org": "Cluj-Napoca, Roumanie",
+      "path.item2.desc": "Stage pratique dans un cabinet d'ophtalmologie : observation des consultations, familiarisation avec les appareils de diagnostic et le flux de travail réel d'un médecin ophtalmologiste. Suite à cette expérience, je présente oralement le stage et les leçons apprises.",
+      "focus.title": "Ce qui m'attire en ophtalmologie",
+      "focus.card1.title": "Diagnostic visuel",
+      "focus.card1.desc": "La capacité de déchiffrer, par un examen attentif, ce qui n'est pas visible à l'œil nu — du fond d'œil à la pression intraoculaire.",
+      "focus.card2.title": "Technologie de pointe",
+      "focus.card2.desc": "Lasers, microscopes chirurgicaux et imagerie avancée — l'ophtalmologie est l'une des spécialités médicales les plus technologiques.",
+      "focus.card3.title": "Impact humain",
+      "focus.card3.desc": "Redonner ou protéger la vue de quelqu'un, c'est changer sa vie — un résultat concret, visible et profondément personnel.",
+      "focus.card4.title": "Précision & rigueur",
+      "focus.card4.desc": "Chaque geste compte au millimètre. La discipline et l'attention aux détails sont les valeurs qui m'attirent vers ce métier.",
+      "skills.title": "Intérêts & qualités",
+      "skills.chip1": "Responsable",
+      "skills.chip2": "Discipliné",
+      "skills.chip3": "Attention aux détails",
+      "skills.chip4": "Ophtalmologie",
+      "skills.chip5": "Diagnostic clinique",
+      "skills.chip6": "Équipement médical",
+      "skills.chip7": "Communication patient",
+      "skills.chip8": "Documentation médicale",
+      "skills.chip9": "Curiosité scientifique",
+      "skills.langsTitle": "Langues parlées",
+      "skills.lang1": "Roumain",
+      "skills.lang2": "Anglais",
+      "skills.lang3": "Français",
+      "contact.title": "Prenons contact",
+      "contact.desc": "Ouvert aux opportunités d'apprentissage, de mentorat et de collaboration dans le domaine de l'ophtalmologie.",
+      "footer.built": "Construit avec",
+      "footer.for": "pour l'ophtalmologie"
+    }
+  };
+
+  const FRENCH_COUNTRIES = new Set([
+    'FR','BE','CH','LU','MC','SN','CI','ML','BF','NE','TG','BJ','GN','CD',
+    'CM','MG','RE','GP','MQ','GF','PM','MF','BL','NC','PF','WF','YT','TF'
+  ]);
+
+  function applyLang(lang) {
+    const t = translations[lang];
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      if (t[key] !== undefined) {
+        if (key === 'hero.grad') {
+          el.innerHTML = t[key].replace('\n', '<br>');
+        } else if (t[key].includes('<strong>')) {
+          el.innerHTML = t[key];
+        } else {
+          el.textContent = t[key];
+        }
+      }
+    });
+    document.getElementById('btn-ro').classList.toggle('active', lang === 'ro');
+    document.getElementById('btn-fr').classList.toggle('active', lang === 'fr');
+    localStorage.setItem('lang', lang);
+  }
+
+  function setLang(lang) {
+    applyLang(lang);
+  }
+
+  async function detectAndApplyLang() {
+    const saved = localStorage.getItem('lang');
+    if (saved === 'ro' || saved === 'fr') {
+      applyLang(saved);
+      return;
+    }
+    try {
+      const res = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(3000) });
+      const data = await res.json();
+      const lang = FRENCH_COUNTRIES.has(data.country_code) ? 'fr' : 'ro';
+      applyLang(lang);
+    } catch {
+      applyLang('ro');
+    }
+  }
+
   document.getElementById('yr').textContent = new Date().getFullYear();
-  const io = new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
-  },{threshold:.12});
-  document.querySelectorAll('.reveal').forEach((el,i)=>{ el.style.transitionDelay=(i%4*60)+'ms'; io.observe(el); });
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: .12 });
+  document.querySelectorAll('.reveal').forEach((el, i) => { el.style.transitionDelay = (i % 4 * 60) + 'ms'; io.observe(el); });
+
+  detectAndApplyLang();
 </script>
 </body>
 </html>

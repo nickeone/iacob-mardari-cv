@@ -506,20 +506,24 @@
     applyLang(lang);
   }
 
-  async function detectAndApplyLang() {
-    const saved = localStorage.getItem('lang');
-    if (saved === 'ro' || saved === 'fr') {
-      applyLang(saved);
-      return;
-    }
-    try {
-      const res = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(3000) });
-      const data = await res.json();
-      const lang = FRENCH_COUNTRIES.has(data.country_code) ? 'fr' : 'ro';
-      applyLang(lang);
-    } catch {
-      applyLang('ro');
-    }
+  // Apply language synchronously so content is never blank on load
+  var _initLang = localStorage.getItem('lang');
+  applyLang(_initLang === 'fr' ? 'fr' : 'ro');
+
+  // Then async-detect IP only when no saved preference
+  if (_initLang !== 'ro' && _initLang !== 'fr') {
+    (function() {
+      var controller = new XMLHttpRequest();
+      controller.open('GET', 'https://ipapi.co/json/');
+      controller.timeout = 3000;
+      controller.onload = function() {
+        try {
+          var data = JSON.parse(controller.responseText);
+          if (FRENCH_COUNTRIES.has(data.country_code)) applyLang('fr');
+        } catch(e) {}
+      };
+      controller.send();
+    })();
   }
 
   document.getElementById('yr').textContent = new Date().getFullYear();
@@ -528,8 +532,6 @@
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
   }, { threshold: .12 });
   document.querySelectorAll('.reveal').forEach((el, i) => { el.style.transitionDelay = (i % 4 * 60) + 'ms'; io.observe(el); });
-
-  detectAndApplyLang();
 </script>
 </body>
 </html>

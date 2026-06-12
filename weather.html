@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Weather App</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0e14;
+      --card: #111827;
+      --card2: #1a2235;
+      --border: rgba(255,255,255,0.07);
+      --text: #e8edf5;
+      --muted: #6b7a99;
+      --accent: #4fd1c5;
+      --gold: #d8b97a;
+      --rain: #60a5fa;
+      --sun: #fbbf24;
+      --red: #f87171;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem 4rem;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      letter-spacing: -0.5px;
+    }
+    h1 span { color: var(--accent); }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.875rem;
+      margin-bottom: 2rem;
+    }
+
+    /* API key banner */
+    #api-banner {
+      background: rgba(251,191,36,0.1);
+      border: 1px solid rgba(251,191,36,0.3);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      max-width: 600px;
+      width: 100%;
+      margin-bottom: 1.5rem;
+      font-size: 0.82rem;
+      color: #fbbf24;
+      line-height: 1.6;
+    }
+    #api-banner strong { display: block; margin-bottom: 0.25rem; font-size: 0.9rem; }
+    #api-banner a { color: #fbbf24; }
+    #api-key-row { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
+    #api-key-input {
+      flex: 1;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(251,191,36,0.4);
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+      color: #fff;
+      font-size: 0.82rem;
+      font-family: monospace;
+    }
+    #api-key-input:focus { outline: none; border-color: #fbbf24; }
+    #save-key {
+      background: #fbbf24;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      font-weight: 700;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    #save-key:hover { background: #f59e0b; }
+
+    /* Search */
+    .search-row {
+      display: flex;
+      gap: 0.5rem;
+      max-width: 600px;
+      width: 100%;
+      margin-bottom: 1.5rem;
+    }
+    #city-input {
+      flex: 1;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.85rem 1.1rem;
+      color: var(--text);
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+    #city-input:focus { outline: none; border-color: var(--accent); }
+    #city-input::placeholder { color: var(--muted); }
+
+    .btn {
+      background: var(--accent);
+      color: #0a0e14;
+      border: none;
+      border-radius: 12px;
+      padding: 0.85rem 1.4rem;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      white-space: nowrap;
+    }
+    .btn:hover { background: #38b2ac; }
+    .btn:active { transform: scale(0.97); }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .btn-outline:hover { background: var(--card); color: var(--text); border-color: var(--accent); }
+
+    /* Error */
+    #error-msg {
+      color: var(--red);
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+      display: none;
+    }
+
+    /* Loading */
+    #loading {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      padding: 3rem;
+      color: var(--muted);
+    }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Current weather card */
+    #current-card {
+      display: none;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2rem;
+      max-width: 600px;
+      width: 100%;
+      margin-bottom: 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    #current-card::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(79,209,197,0.08), transparent 70%);
+      pointer-events: none;
+    }
+
+    .city-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+    .city-country {
+      color: var(--muted);
+      font-size: 0.875rem;
+      margin-bottom: 1.5rem;
+    }
+    .current-main {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .weather-icon { font-size: 5rem; line-height: 1; }
+    .temp-block { flex: 1; }
+    .temp {
+      font-size: 4rem;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--accent);
+    }
+    .feels-like { color: var(--muted); font-size: 0.85rem; margin-top: 0.25rem; }
+    .description {
+      font-size: 1.1rem;
+      font-weight: 500;
+      text-transform: capitalize;
+      margin-top: 0.25rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+    }
+    .stat {
+      background: var(--card2);
+      border-radius: 12px;
+      padding: 0.75rem 1rem;
+    }
+    .stat-label { color: var(--muted); font-size: 0.75rem; margin-bottom: 0.25rem; }
+    .stat-value { font-size: 1.1rem; font-weight: 600; }
+
+    /* Forecast */
+    #forecast-section {
+      display: none;
+      max-width: 600px;
+      width: 100%;
+    }
+    .section-title {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    .forecast-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.5rem;
+    }
+    .forecast-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 0.9rem 0.5rem;
+      text-align: center;
+      transition: border-color 0.2s;
+    }
+    .forecast-card:hover { border-color: var(--accent); }
+    .fc-day { font-size: 0.72rem; color: var(--muted); font-weight: 600; margin-bottom: 0.5rem; }
+    .fc-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .fc-temp-high { font-size: 1rem; font-weight: 700; color: var(--text); }
+    .fc-temp-low { font-size: 0.8rem; color: var(--muted); margin-top: 0.1rem; }
+    .fc-desc { font-size: 0.65rem; color: var(--muted); margin-top: 0.4rem; text-transform: capitalize; }
+
+    /* Hourly strip */
+    #hourly-section {
+      display: none;
+      max-width: 600px;
+      width: 100%;
+      margin-bottom: 1.5rem;
+    }
+    .hourly-scroll {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+      scrollbar-width: thin;
+      scrollbar-color: var(--card2) transparent;
+    }
+    .hour-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.75rem 0.6rem;
+      text-align: center;
+      min-width: 72px;
+      flex-shrink: 0;
+    }
+    .hc-time { font-size: 0.7rem; color: var(--muted); margin-bottom: 0.4rem; }
+    .hc-icon { font-size: 1.4rem; margin-bottom: 0.4rem; }
+    .hc-temp { font-size: 0.95rem; font-weight: 700; }
+
+    @media (max-width: 500px) {
+      .forecast-grid { grid-template-columns: repeat(3, 1fr); }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .temp { font-size: 3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>Weather <span>App</span></h1>
+<p class="subtitle">Meteo în timp real + prognoză 5 zile</p>
+
+<div id="api-banner">
+  <strong>⚙️ Configurare necesară</strong>
+  Ai nevoie de un API key gratuit de la
+  <a href="https://openweathermap.org/api" target="_blank">openweathermap.org</a>
+  (înregistrare gratuită → My API Keys). Cheia devine activă în ~10 minute.
+  <div id="api-key-row">
+    <input id="api-key-input" type="text" placeholder="Lipește API key-ul tău aici..."/>
+    <button id="save-key" onclick="saveApiKey()">Salvează</button>
+  </div>
+</div>
+
+<div class="search-row">
+  <input id="city-input" type="text" placeholder="Caută un oraș... (ex: Paris, Cluj, Tokyo)"
+    onkeydown="if(event.key==='Enter') search()"/>
+  <button class="btn btn-outline" onclick="geolocate()" title="Detectează locația mea">📍</button>
+  <button class="btn" onclick="search()">Caută</button>
+</div>
+
+<p id="error-msg"></p>
+
+<div id="loading">
+  <div class="spinner"></div>
+  <span>Se încarcă datele meteo...</span>
+</div>
+
+<div id="current-card">
+  <div class="city-name" id="c-name"></div>
+  <div class="city-country" id="c-country"></div>
+  <div class="current-main">
+    <div class="weather-icon" id="c-icon"></div>
+    <div class="temp-block">
+      <div class="temp" id="c-temp"></div>
+      <div class="description" id="c-desc"></div>
+      <div class="feels-like" id="c-feels"></div>
+    </div>
+  </div>
+  <div class="stats-grid">
+    <div class="stat">
+      <div class="stat-label">💧 Umiditate</div>
+      <div class="stat-value" id="c-humidity"></div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">💨 Vânt</div>
+      <div class="stat-value" id="c-wind"></div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">🌡️ Presiune</div>
+      <div class="stat-value" id="c-pressure"></div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">👁️ Vizibilitate</div>
+      <div class="stat-value" id="c-visibility"></div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">🌅 Răsărit</div>
+      <div class="stat-value" id="c-sunrise"></div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">🌇 Apus</div>
+      <div class="stat-value" id="c-sunset"></div>
+    </div>
+  </div>
+</div>
+
+<div id="hourly-section">
+  <p class="section-title">Următoarele 24 ore</p>
+  <div class="hourly-scroll" id="hourly-scroll"></div>
+</div>
+
+<div id="forecast-section">
+  <p class="section-title">Prognoză 5 zile</p>
+  <div class="forecast-grid" id="forecast-grid"></div>
+</div>
+
+<script>
+  let API_KEY = localStorage.getItem('owm_key') || '';
+
+  // Show/hide API banner
+  function updateBanner() {
+    const banner = document.getElementById('api-banner');
+    banner.style.display = API_KEY ? 'none' : 'block';
+    if (API_KEY) document.getElementById('api-key-input').value = API_KEY;
+  }
+
+  function saveApiKey() {
+    const val = document.getElementById('api-key-input').value.trim();
+    if (!val) return;
+    API_KEY = val;
+    localStorage.setItem('owm_key', val);
+    updateBanner();
+    showError('');
+  }
+
+  updateBanner();
+
+  // Weather code → emoji
+  function weatherEmoji(code, isDay = true) {
+    if (code >= 200 && code < 300) return '⛈️';
+    if (code >= 300 && code < 400) return '🌦️';
+    if (code >= 500 && code < 600) {
+      if (code === 511) return '🌨️';
+      return code >= 502 ? '🌧️' : '🌦️';
+    }
+    if (code >= 600 && code < 700) return '❄️';
+    if (code >= 700 && code < 800) return '🌫️';
+    if (code === 800) return isDay ? '☀️' : '🌙';
+    if (code === 801) return isDay ? '🌤️' : '☁️';
+    if (code <= 803) return '⛅';
+    return '☁️';
+  }
+
+  function formatTime(unix, tz) {
+    return new Date((unix + tz) * 1000).toUTCString().slice(17, 22);
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('error-msg');
+    el.textContent = msg;
+    el.style.display = msg ? 'block' : 'none';
+  }
+
+  function setLoading(on) {
+    document.getElementById('loading').style.display = on ? 'flex' : 'none';
+    if (on) {
+      document.getElementById('current-card').style.display = 'none';
+      document.getElementById('hourly-section').style.display = 'none';
+      document.getElementById('forecast-section').style.display = 'none';
+    }
+  }
+
+  async function fetchWeather(url) {
+    const res = await fetch(url);
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.message || `Eroare ${res.status}`);
+    }
+    return res.json();
+  }
+
+  async function loadData(query) {
+    if (!API_KEY) {
+      showError('Introduceți API key-ul mai sus înainte de a căuta.');
+      return;
+    }
+    showError('');
+    setLoading(true);
+
+    try {
+      const base = 'https://api.openweathermap.org/data/2.5';
+      const params = `${query}&appid=${API_KEY}&units=metric&lang=ro`;
+
+      const [current, forecast] = await Promise.all([
+        fetchWeather(`${base}/weather?${params}`),
+        fetchWeather(`${base}/forecast?${params}`)
+      ]);
+
+      renderCurrent(current);
+      renderHourly(forecast, current.timezone);
+      renderForecast(forecast, current.timezone);
+
+    } catch (e) {
+      showError('❌ ' + (e.message === 'city not found' ? 'Orașul nu a fost găsit.' : e.message));
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function search() {
+    const city = document.getElementById('city-input').value.trim();
+    if (!city) return;
+    loadData(`q=${encodeURIComponent(city)}`);
+  }
+
+  function geolocate() {
+    if (!navigator.geolocation) { showError('Geolocation nu e suportat de browser.'); return; }
+    setLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      pos => loadData(`lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`),
+      () => { setLoading(false); showError('Nu am putut obține locația ta.'); }
+    );
+  }
+
+  function renderCurrent(d) {
+    const isDay = d.dt > d.sys.sunrise && d.dt < d.sys.sunset;
+    document.getElementById('c-name').textContent = d.name;
+    document.getElementById('c-country').textContent = `${d.sys.country} · actualizat la ${formatTime(d.dt, d.timezone)}`;
+    document.getElementById('c-icon').textContent = weatherEmoji(d.weather[0].id, isDay);
+    document.getElementById('c-temp').textContent = `${Math.round(d.main.temp)}°C`;
+    document.getElementById('c-desc').textContent = d.weather[0].description;
+    document.getElementById('c-feels').textContent = `Se simte ca ${Math.round(d.main.feels_like)}°C`;
+    document.getElementById('c-humidity').textContent = `${d.main.humidity}%`;
+    document.getElementById('c-wind').textContent = `${Math.round(d.wind.speed * 3.6)} km/h`;
+    document.getElementById('c-pressure').textContent = `${d.main.pressure} hPa`;
+    document.getElementById('c-visibility').textContent = `${(d.visibility / 1000).toFixed(1)} km`;
+    document.getElementById('c-sunrise').textContent = formatTime(d.sys.sunrise, d.timezone);
+    document.getElementById('c-sunset').textContent = formatTime(d.sys.sunset, d.timezone);
+    document.getElementById('current-card').style.display = 'block';
+  }
+
+  function renderHourly(forecast, tz) {
+    const items = forecast.list.slice(0, 8);
+    const scroll = document.getElementById('hourly-scroll');
+    scroll.innerHTML = items.map(item => {
+      const hour = new Date((item.dt + tz) * 1000).toUTCString().slice(17, 20) + 'h';
+      return `<div class="hour-card">
+        <div class="hc-time">${hour}</div>
+        <div class="hc-icon">${weatherEmoji(item.weather[0].id)}</div>
+        <div class="hc-temp">${Math.round(item.main.temp)}°C</div>
+      </div>`;
+    }).join('');
+    document.getElementById('hourly-section').style.display = 'block';
+  }
+
+  function renderForecast(forecast, tz) {
+    // Group by day, take one per day (noon or first of day)
+    const days = {};
+    const dayNames = ['Dum','Lun','Mar','Mie','Joi','Vin','Sâm'];
+    forecast.list.forEach(item => {
+      const d = new Date((item.dt + tz) * 1000);
+      const key = d.toUTCString().slice(5, 11);
+      if (!days[key]) days[key] = { items: [], name: dayNames[d.getDay()] };
+      days[key].items.push(item);
+    });
+
+    const grid = document.getElementById('forecast-grid');
+    grid.innerHTML = Object.entries(days).slice(0, 5).map(([date, {name, items}]) => {
+      const temps = items.map(i => i.main.temp);
+      const high = Math.round(Math.max(...temps));
+      const low = Math.round(Math.min(...temps));
+      // pick midday item
+      const mid = items[Math.floor(items.length / 2)];
+      const emoji = weatherEmoji(mid.weather[0].id);
+      const desc = mid.weather[0].description;
+      return `<div class="forecast-card">
+        <div class="fc-day">${name}<br><span style="font-weight:400;color:#4a5568">${date}</span></div>
+        <div class="fc-icon">${emoji}</div>
+        <div class="fc-temp-high">${high}°</div>
+        <div class="fc-temp-low">${low}°</div>
+        <div class="fc-desc">${desc}</div>
+      </div>`;
+    }).join('');
+
+    document.getElementById('forecast-section').style.display = 'block';
+  }
+
+  // Auto-load last city if key exists
+  if (API_KEY) {
+    const lastCity = localStorage.getItem('owm_last_city');
+    if (lastCity) {
+      document.getElementById('city-input').value = lastCity;
+      loadData(`q=${encodeURIComponent(lastCity)}`);
+    }
+  }
+
+  // Save last searched city
+  document.getElementById('city-input').addEventListener('change', () => {
+    const v = document.getElementById('city-input').value.trim();
+    if (v) localStorage.setItem('owm_last_city', v);
+  });
+</script>
+</body>
+</html>

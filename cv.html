@@ -28,10 +28,10 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  /* Print button — hidden on print */
+  /* Print bar — hidden on print */
   .print-bar {
     background: #1f2937;
-    padding: 14px 32px;
+    padding: 12px 32px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -40,15 +40,32 @@
     top: 0;
     z-index: 10;
   }
-  .print-bar span { color: #9ca3af; font-size: 14px; }
   .print-bar a { color: #9ca3af; font-size: 14px; text-decoration: none; }
   .print-bar a:hover { color: #fff; }
+  .bar-right { display: flex; align-items: center; gap: 12px; }
+
+  /* Lang switcher */
+  .cv-lang-switcher {
+    display: flex; align-items: center; gap: 3px;
+    background: #374151; border: 1px solid #4b5563;
+    border-radius: 999px; padding: 3px;
+  }
+  .cv-lang-btn {
+    display: flex; align-items: center; gap: 5px;
+    padding: 4px 10px; border-radius: 999px;
+    font-size: 12px; font-weight: 500; cursor: pointer;
+    transition: background .2s, color .2s; color: #9ca3af;
+    background: transparent; border: none; font-family: inherit;
+  }
+  .cv-lang-btn.active { background: var(--accent); color: #fff; }
+  .cv-lang-btn:not(.active):hover { color: #fff; }
+
   .btn-print {
     display: inline-flex; align-items: center; gap: 8px;
     background: var(--accent); color: #fff;
     border: none; cursor: pointer;
-    padding: 10px 20px; border-radius: 8px;
-    font-size: 14px; font-weight: 600; font-family: inherit;
+    padding: 9px 18px; border-radius: 8px;
+    font-size: 13px; font-weight: 600; font-family: inherit;
     transition: opacity .2s;
   }
   .btn-print:hover { opacity: .88; }
@@ -90,7 +107,6 @@
     text-transform: uppercase; letter-spacing: .1em;
     margin-top: 5px; font-weight: 500;
   }
-
   .s-section { display: flex; flex-direction: column; gap: 10px; }
   .s-label {
     font-size: 10px; letter-spacing: .15em; text-transform: uppercase;
@@ -118,36 +134,29 @@
     border-radius: 999px; font-weight: 500;
   }
 
-  /* Main content */
+  /* Main */
   .main { padding: 36px 32px; display: flex; flex-direction: column; gap: 26px; }
-
   .section-title {
     font-family: 'Fraunces', serif; font-size: 13px; font-weight: 600;
     color: var(--accent); text-transform: uppercase; letter-spacing: .12em;
     border-bottom: 1.5px solid var(--accent-light); padding-bottom: 6px;
     margin-bottom: 14px;
   }
-
-  /* About */
   .about-text { font-size: 13px; color: var(--txt-soft); line-height: 1.65; font-weight: 300; }
   .about-text strong { color: var(--txt); font-weight: 500; }
 
-  /* Timeline */
   .timeline { display: flex; flex-direction: column; gap: 16px; }
   .t-item { display: grid; grid-template-columns: 90px 1fr; gap: 12px; }
   .t-date { font-size: 11px; color: var(--txt-dim); font-weight: 500; padding-top: 2px; line-height: 1.4; }
-  .t-body {}
   .t-title { font-size: 13.5px; font-weight: 600; color: var(--txt); }
   .t-org { font-size: 12px; color: var(--accent); font-weight: 500; margin-top: 1px; }
   .t-desc { font-size: 12px; color: var(--txt-soft); font-weight: 300; margin-top: 4px; line-height: 1.55; }
 
-  /* Education */
   .edu-item { display: flex; flex-direction: column; gap: 2px; }
   .edu-title { font-size: 13.5px; font-weight: 600; color: var(--txt); }
   .edu-school { font-size: 12px; color: var(--accent); font-weight: 500; }
   .edu-detail { font-size: 12px; color: var(--txt-soft); font-weight: 300; }
 
-  /* Qualities */
   .qual-chips { display: flex; flex-wrap: wrap; gap: 6px; }
   .qual-chip {
     font-size: 12px; padding: 4px 12px;
@@ -155,162 +164,251 @@
     color: var(--txt-soft); font-weight: 400;
   }
 
-  /* Footer line */
   .cv-footer {
     font-size: 10px; color: var(--txt-dim); text-align: center;
     padding-top: 16px; border-top: 1px solid var(--line);
     margin-top: auto;
   }
 
-  /* ===== PRINT ===== */
   @media print {
     body { background: white; }
     .print-bar { display: none; }
-    .page {
-      width: 100%; margin: 0;
-      box-shadow: none;
-      min-height: 100vh;
-    }
+    .page { width: 100%; margin: 0; box-shadow: none; min-height: 100vh; }
   }
 </style>
 </head>
 <body>
 
 <div class="print-bar">
-  <a href="index.html">← Înapoi la site</a>
-  <span>CV — Iacob Mardari</span>
-  <button class="btn-print" onclick="window.print()">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-    Télécharger PDF
-  </button>
+  <a href="index.html" data-i18n="bar.back">← Înapoi la site</a>
+  <div class="bar-right">
+    <div class="cv-lang-switcher">
+      <button class="cv-lang-btn" id="cv-btn-ro" onclick="setCvLang('ro')">🇷🇴 RO</button>
+      <button class="cv-lang-btn" id="cv-btn-fr" onclick="setCvLang('fr')">🇫🇷 FR</button>
+    </div>
+    <button class="btn-print" onclick="window.print()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      <span data-i18n="bar.print">Télécharger PDF</span>
+    </button>
+  </div>
 </div>
 
 <div class="page">
-
-  <!-- SIDEBAR -->
   <aside class="sidebar">
-
     <div class="sidebar-top">
       <div class="avatar">IM</div>
       <h1>Iacob Mardari</h1>
-      <div class="role">Futur ophtalmologiste</div>
+      <div class="role" data-i18n="role">Futur ophtalmologiste</div>
     </div>
 
     <div class="s-section">
-      <div class="s-label">Contact</div>
+      <div class="s-label" data-i18n="s.contact">Contact</div>
       <div class="s-item">
         <span class="val">mardariiacob2@gmail.com</span>
         <span class="lbl">E-mail</span>
       </div>
       <div class="s-item">
         <span class="val">+33 6 95 90 63 49</span>
-        <span class="lbl">Téléphone</span>
+        <span class="lbl" data-i18n="s.phone">Téléphone</span>
       </div>
       <div class="s-item">
         <span class="val">Strasbourg, 67000</span>
-        <span class="lbl">Ville</span>
+        <span class="lbl" data-i18n="s.city">Ville</span>
       </div>
     </div>
 
     <div class="s-section">
-      <div class="s-label">Informations</div>
+      <div class="s-label" data-i18n="s.info">Informations</div>
       <div class="s-item">
-        <span class="val">05 octobre 2010</span>
-        <span class="lbl">Date de naissance</span>
+        <span class="val" data-i18n="s.dob">05 octobre 2010</span>
+        <span class="lbl" data-i18n="s.dob.lbl">Date de naissance</span>
       </div>
       <div class="s-item">
-        <span class="val">Nationalité roumaine</span>
-        <span class="lbl">Nationalité</span>
+        <span class="val" data-i18n="s.nat">Nationalité roumaine</span>
+        <span class="lbl" data-i18n="s.nat.lbl">Nationalité</span>
       </div>
     </div>
 
     <div class="s-section">
-      <div class="s-label">Langues</div>
+      <div class="s-label" data-i18n="s.langs">Langues</div>
       <div class="lang-row">
         <div class="lang-entry">
-          <div class="lang-top"><span class="lang-name">🇷🇴 Roumain</span><span class="lang-lvl">C2</span></div>
+          <div class="lang-top"><span class="lang-name">🇷🇴 <span data-i18n="lang.ro">Roumain</span></span><span class="lang-lvl">C2</span></div>
           <div class="bar-bg"><div class="bar-fill" style="width:100%"></div></div>
         </div>
         <div class="lang-entry">
-          <div class="lang-top"><span class="lang-name">🇫🇷 Français</span><span class="lang-lvl">C2</span></div>
+          <div class="lang-top"><span class="lang-name">🇫🇷 <span data-i18n="lang.fr">Français</span></span><span class="lang-lvl">C2</span></div>
           <div class="bar-bg"><div class="bar-fill" style="width:100%"></div></div>
         </div>
         <div class="lang-entry">
-          <div class="lang-top"><span class="lang-name">🇬🇧 Anglais</span><span class="lang-lvl">B2</span></div>
+          <div class="lang-top"><span class="lang-name">🇬🇧 <span data-i18n="lang.en">Anglais</span></span><span class="lang-lvl">B2</span></div>
           <div class="bar-bg"><div class="bar-fill" style="width:70%"></div></div>
         </div>
       </div>
     </div>
 
     <div class="s-section">
-      <div class="s-label">Compétences</div>
+      <div class="s-label" data-i18n="s.skills">Compétences</div>
       <div class="chips">
-        <span class="chip">Ophtalmologie</span>
-        <span class="chip">Diagnostic</span>
-        <span class="chip">Équipement médical</span>
-        <span class="chip">Communication</span>
-        <span class="chip">Documentation</span>
+        <span class="chip" data-i18n="sk.1">Ophtalmologie</span>
+        <span class="chip" data-i18n="sk.2">Diagnostic</span>
+        <span class="chip" data-i18n="sk.3">Équipement médical</span>
+        <span class="chip" data-i18n="sk.4">Communication</span>
+        <span class="chip" data-i18n="sk.5">Documentation</span>
       </div>
     </div>
-
   </aside>
 
-  <!-- MAIN -->
   <main class="main">
-
     <section>
-      <div class="section-title">Profil</div>
-      <p class="about-text">Lycéen passionné par la médecine oculaire, fasciné par la combinaison de <strong>précision chirurgicale</strong>, de technologie de pointe et de l'impact humain profond qu'offre l'ophtalmologie. Motivé, rigoureux et curieux, je souhaite construire une carrière dans cette spécialité médicale.</p>
+      <div class="section-title" data-i18n="sec.profile">Profil</div>
+      <p class="about-text" data-i18n="profile.text">Lycéen passionné par la médecine oculaire, fasciné par la combinaison de <strong>précision chirurgicale</strong>, de technologie de pointe et de l'impact humain profond qu'offre l'ophtalmologie. Motivé, rigoureux et curieux, je souhaite construire une carrière dans cette spécialité médicale.</p>
     </section>
 
     <section>
-      <div class="section-title">Formation</div>
+      <div class="section-title" data-i18n="sec.edu">Formation</div>
       <div class="edu-item">
         <div class="edu-title">Lycée Sainte-Clotilde</div>
         <div class="edu-school">Strasbourg, 67000</div>
-        <div class="edu-detail">Lycée général — en cours</div>
+        <div class="edu-detail" data-i18n="edu.detail">Lycée général — en cours</div>
       </div>
     </section>
 
     <section>
-      <div class="section-title">Expériences</div>
+      <div class="section-title" data-i18n="sec.exp">Expériences</div>
       <div class="timeline">
         <div class="t-item">
-          <div class="t-date">Juin 2026</div>
+          <div class="t-date" data-i18n="exp1.date">Juin 2026</div>
           <div class="t-body">
-            <div class="t-title">Stage — Cabinet d'ophtalmologie</div>
-            <div class="t-org">Cluj-Napoca, Roumanie</div>
-            <div class="t-desc">Observation des consultations, familiarisation avec les appareils de diagnostic (fond d'œil, tonométrie, réfractomètre) et le flux de travail d'un ophtalmologiste. Présentation orale du bilan de stage.</div>
+            <div class="t-title" data-i18n="exp1.title">Stage — Cabinet d'ophtalmologie</div>
+            <div class="t-org">Cluj-Napoca, <span data-i18n="exp1.country">Roumanie</span></div>
+            <div class="t-desc" data-i18n="exp1.desc">Observation des consultations, familiarisation avec les appareils de diagnostic (fond d'œil, tonométrie, réfractomètre) et le flux de travail d'un ophtalmologiste. Présentation orale du bilan de stage.</div>
           </div>
         </div>
         <div class="t-item">
-          <div class="t-date">Mars 2026</div>
+          <div class="t-date" data-i18n="exp2.date">Mars 2026</div>
           <div class="t-body">
-            <div class="t-title">Présentation — « Le métier d'ophtalmologiste »</div>
-            <div class="t-org">Projet personnel</div>
-            <div class="t-desc">Recherche approfondie et présentation sur le rôle, les responsabilités et les défis du métier d'ophtalmologiste — de la formation médicale à la relation avec le patient.</div>
+            <div class="t-title" data-i18n="exp2.title">Présentation — « Le métier d'ophtalmologiste »</div>
+            <div class="t-org" data-i18n="exp2.org">Projet personnel</div>
+            <div class="t-desc" data-i18n="exp2.desc">Recherche approfondie et présentation sur le rôle, les responsabilités et les défis du métier d'ophtalmologiste — de la formation médicale à la relation avec le patient.</div>
           </div>
         </div>
       </div>
     </section>
 
     <section>
-      <div class="section-title">Qualités</div>
+      <div class="section-title" data-i18n="sec.qual">Qualités</div>
       <div class="qual-chips">
-        <span class="qual-chip">Responsable</span>
-        <span class="qual-chip">Discipliné</span>
-        <span class="qual-chip">Attention aux détails</span>
-        <span class="qual-chip">Curieux</span>
-        <span class="qual-chip">Organisé</span>
+        <span class="qual-chip" data-i18n="q.1">Responsable</span>
+        <span class="qual-chip" data-i18n="q.2">Discipliné</span>
+        <span class="qual-chip" data-i18n="q.3">Attention aux détails</span>
+        <span class="qual-chip" data-i18n="q.4">Curieux</span>
+        <span class="qual-chip" data-i18n="q.5">Organisé</span>
       </div>
     </section>
 
     <div class="cv-footer">
       iacob-mardari-cv.vercel.app &nbsp;·&nbsp; mardariiacob2@gmail.com &nbsp;·&nbsp; +33 6 95 90 63 49
     </div>
-
   </main>
 </div>
 
+<script>
+var t = {
+  fr: {
+    "bar.back": "← Retour au site",
+    "bar.print": "Télécharger PDF",
+    "role": "Futur ophtalmologiste",
+    "s.contact": "Contact",
+    "s.phone": "Téléphone",
+    "s.city": "Ville",
+    "s.info": "Informations",
+    "s.dob": "05 octobre 2010",
+    "s.dob.lbl": "Date de naissance",
+    "s.nat": "Nationalité roumaine",
+    "s.nat.lbl": "Nationalité",
+    "s.langs": "Langues",
+    "lang.ro": "Roumain",
+    "lang.fr": "Français",
+    "lang.en": "Anglais",
+    "s.skills": "Compétences",
+    "sk.1": "Ophtalmologie", "sk.2": "Diagnostic", "sk.3": "Équipement médical",
+    "sk.4": "Communication", "sk.5": "Documentation",
+    "sec.profile": "Profil",
+    "profile.text": "Lycéen passionné par la médecine oculaire, fasciné par la combinaison de <strong>précision chirurgicale</strong>, de technologie de pointe et de l'impact humain profond qu'offre l'ophtalmologie. Motivé, rigoureux et curieux, je souhaite construire une carrière dans cette spécialité médicale.",
+    "sec.edu": "Formation",
+    "edu.detail": "Lycée général — en cours",
+    "sec.exp": "Expériences",
+    "exp1.date": "Juin 2026",
+    "exp1.title": "Stage — Cabinet d'ophtalmologie",
+    "exp1.country": "Roumanie",
+    "exp1.desc": "Observation des consultations, familiarisation avec les appareils de diagnostic (fond d'œil, tonométrie, réfractomètre) et le flux de travail d'un ophtalmologiste. Présentation orale du bilan de stage.",
+    "exp2.date": "Mars 2026",
+    "exp2.title": "Présentation — « Le métier d'ophtalmologiste »",
+    "exp2.org": "Projet personnel",
+    "exp2.desc": "Recherche approfondie et présentation sur le rôle, les responsabilités et les défis du métier d'ophtalmologiste — de la formation médicale à la relation avec le patient.",
+    "sec.qual": "Qualités",
+    "q.1": "Responsable", "q.2": "Discipliné", "q.3": "Attention aux détails",
+    "q.4": "Curieux", "q.5": "Organisé"
+  },
+  ro: {
+    "bar.back": "← Înapoi la site",
+    "bar.print": "Descarcă PDF",
+    "role": "Viitor oftalmolog",
+    "s.contact": "Contact",
+    "s.phone": "Telefon",
+    "s.city": "Oraș",
+    "s.info": "Informații",
+    "s.dob": "05 octombrie 2010",
+    "s.dob.lbl": "Data nașterii",
+    "s.nat": "Naționalitate română",
+    "s.nat.lbl": "Naționalitate",
+    "s.langs": "Limbi",
+    "lang.ro": "Română",
+    "lang.fr": "Franceză",
+    "lang.en": "Engleză",
+    "s.skills": "Competențe",
+    "sk.1": "Oftalmologie", "sk.2": "Diagnostic", "sk.3": "Aparatură medicală",
+    "sk.4": "Comunicare", "sk.5": "Documentare",
+    "sec.profile": "Profil",
+    "profile.text": "Elev pasionat de medicina ochiului, fascinat de combinația dintre <strong>precizia chirurgicală</strong>, tehnologia de ultimă generație și impactul uman profund pe care îl oferă oftalmologia. Motivat, riguros și curios, doresc să construiesc o carieră în această specialitate medicală.",
+    "sec.edu": "Educație",
+    "edu.detail": "Liceu general — în curs",
+    "sec.exp": "Experiențe",
+    "exp1.date": "Iunie 2026",
+    "exp1.title": "Internship — Cabinet de oftalmologie",
+    "exp1.country": "România",
+    "exp1.desc": "Observarea consultațiilor, familiarizarea cu aparatura de diagnostic (fund de ochi, tonometrie, refractometru) și fluxul de lucru al unui oftalmolog. Prezentare orală a bilanțului stagiului.",
+    "exp2.date": "Martie 2026",
+    "exp2.title": "Prezentare — «Meseria de oftalmolog»",
+    "exp2.org": "Proiect personal",
+    "exp2.desc": "Documentare și prezentare despre rolul, responsabilitățile și provocările profesiei de oftalmolog — de la formarea medicală până la relația cu pacientul.",
+    "sec.qual": "Calități",
+    "q.1": "Responsabil", "q.2": "Disciplinat", "q.3": "Atenție la detalii",
+    "q.4": "Curios", "q.5": "Organizat"
+  }
+};
+
+function applyCvLang(lang) {
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var key = el.dataset.i18n;
+    if (!t[lang] || t[lang][key] === undefined) return;
+    var val = t[lang][key];
+    if (val.indexOf('<') !== -1) { el.innerHTML = val; }
+    else { el.textContent = val; }
+  });
+  document.getElementById('cv-btn-ro').classList.toggle('active', lang === 'ro');
+  document.getElementById('cv-btn-fr').classList.toggle('active', lang === 'fr');
+  try { localStorage.setItem('lang', lang); } catch(e) {}
+}
+
+function setCvLang(lang) { applyCvLang(lang); }
+
+// Init: use same preference as main site, default fr
+var saved = '';
+try { saved = localStorage.getItem('lang') || ''; } catch(e) {}
+applyCvLang(saved === 'ro' ? 'ro' : 'fr');
+</script>
 </body>
 </html>

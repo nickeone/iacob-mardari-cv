@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CV — Iacob Mardari</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --accent: #0d9488;
+    --accent-light: #e6f7f6;
+    --txt: #111827;
+    --txt-soft: #4b5563;
+    --txt-dim: #9ca3af;
+    --line: #e5e7eb;
+    --page: #ffffff;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #f3f4f6;
+    color: var(--txt);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Print button — hidden on print */
+  .print-bar {
+    background: #1f2937;
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .print-bar span { color: #9ca3af; font-size: 14px; }
+  .print-bar a { color: #9ca3af; font-size: 14px; text-decoration: none; }
+  .print-bar a:hover { color: #fff; }
+  .btn-print {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent); color: #fff;
+    border: none; cursor: pointer;
+    padding: 10px 20px; border-radius: 8px;
+    font-size: 14px; font-weight: 600; font-family: inherit;
+    transition: opacity .2s;
+  }
+  .btn-print:hover { opacity: .88; }
+
+  /* Page */
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 28px auto;
+    background: var(--page);
+    box-shadow: 0 4px 32px rgba(0,0,0,.12);
+    display: grid;
+    grid-template-columns: 68mm 1fr;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    background: #0f172a;
+    color: #e2e8f0;
+    padding: 36px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  .sidebar-top { text-align: center; }
+  .avatar {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), #0f766e);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif; font-size: 32px; font-weight: 600;
+    color: #fff; margin: 0 auto 14px;
+  }
+  .sidebar-top h1 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 18px; line-height: 1.2; color: #f8fafc;
+  }
+  .sidebar-top .role {
+    font-size: 11.5px; color: var(--accent);
+    text-transform: uppercase; letter-spacing: .1em;
+    margin-top: 5px; font-weight: 500;
+  }
+
+  .s-section { display: flex; flex-direction: column; gap: 10px; }
+  .s-label {
+    font-size: 10px; letter-spacing: .15em; text-transform: uppercase;
+    color: var(--accent); font-weight: 600; margin-bottom: 4px;
+    border-bottom: 1px solid rgba(255,255,255,.08); padding-bottom: 6px;
+  }
+  .s-item { display: flex; flex-direction: column; gap: 1px; }
+  .s-item .val { font-size: 13px; color: #e2e8f0; font-weight: 400; }
+  .s-item .lbl { font-size: 11px; color: #64748b; }
+
+  /* Language bars */
+  .lang-row { display: flex; flex-direction: column; gap: 7px; }
+  .lang-entry { display: flex; flex-direction: column; gap: 3px; }
+  .lang-top { display: flex; justify-content: space-between; align-items: center; }
+  .lang-name { font-size: 12.5px; color: #e2e8f0; font-weight: 500; }
+  .lang-lvl { font-size: 10.5px; color: var(--accent); font-weight: 600; }
+  .bar-bg { height: 4px; background: rgba(255,255,255,.1); border-radius: 4px; }
+  .bar-fill { height: 4px; background: var(--accent); border-radius: 4px; }
+
+  /* Skills chips */
+  .chips { display: flex; flex-wrap: wrap; gap: 5px; }
+  .chip {
+    font-size: 11px; padding: 3px 9px;
+    background: rgba(13,148,136,.18); color: var(--accent);
+    border-radius: 999px; font-weight: 500;
+  }
+
+  /* Main content */
+  .main { padding: 36px 32px; display: flex; flex-direction: column; gap: 26px; }
+
+  .section-title {
+    font-family: 'Fraunces', serif; font-size: 13px; font-weight: 600;
+    color: var(--accent); text-transform: uppercase; letter-spacing: .12em;
+    border-bottom: 1.5px solid var(--accent-light); padding-bottom: 6px;
+    margin-bottom: 14px;
+  }
+
+  /* About */
+  .about-text { font-size: 13px; color: var(--txt-soft); line-height: 1.65; font-weight: 300; }
+  .about-text strong { color: var(--txt); font-weight: 500; }
+
+  /* Timeline */
+  .timeline { display: flex; flex-direction: column; gap: 16px; }
+  .t-item { display: grid; grid-template-columns: 90px 1fr; gap: 12px; }
+  .t-date { font-size: 11px; color: var(--txt-dim); font-weight: 500; padding-top: 2px; line-height: 1.4; }
+  .t-body {}
+  .t-title { font-size: 13.5px; font-weight: 600; color: var(--txt); }
+  .t-org { font-size: 12px; color: var(--accent); font-weight: 500; margin-top: 1px; }
+  .t-desc { font-size: 12px; color: var(--txt-soft); font-weight: 300; margin-top: 4px; line-height: 1.55; }
+
+  /* Education */
+  .edu-item { display: flex; flex-direction: column; gap: 2px; }
+  .edu-title { font-size: 13.5px; font-weight: 600; color: var(--txt); }
+  .edu-school { font-size: 12px; color: var(--accent); font-weight: 500; }
+  .edu-detail { font-size: 12px; color: var(--txt-soft); font-weight: 300; }
+
+  /* Qualities */
+  .qual-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .qual-chip {
+    font-size: 12px; padding: 4px 12px;
+    border: 1px solid var(--line); border-radius: 999px;
+    color: var(--txt-soft); font-weight: 400;
+  }
+
+  /* Footer line */
+  .cv-footer {
+    font-size: 10px; color: var(--txt-dim); text-align: center;
+    padding-top: 16px; border-top: 1px solid var(--line);
+    margin-top: auto;
+  }
+
+  /* ===== PRINT ===== */
+  @media print {
+    body { background: white; }
+    .print-bar { display: none; }
+    .page {
+      width: 100%; margin: 0;
+      box-shadow: none;
+      min-height: 100vh;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="print-bar">
+  <a href="index.html">← Înapoi la site</a>
+  <span>CV — Iacob Mardari</span>
+  <button class="btn-print" onclick="window.print()">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    Télécharger PDF
+  </button>
+</div>
+
+<div class="page">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="sidebar-top">
+      <div class="avatar">IM</div>
+      <h1>Iacob Mardari</h1>
+      <div class="role">Futur ophtalmologiste</div>
+    </div>
+
+    <div class="s-section">
+      <div class="s-label">Contact</div>
+      <div class="s-item">
+        <span class="val">mardariiacob2@gmail.com</span>
+        <span class="lbl">E-mail</span>
+      </div>
+      <div class="s-item">
+        <span class="val">+33 6 95 90 63 49</span>
+        <span class="lbl">Téléphone</span>
+      </div>
+      <div class="s-item">
+        <span class="val">Strasbourg, 67000</span>
+        <span class="lbl">Ville</span>
+      </div>
+    </div>
+
+    <div class="s-section">
+      <div class="s-label">Informations</div>
+      <div class="s-item">
+        <span class="val">05 octobre 2010</span>
+        <span class="lbl">Date de naissance</span>
+      </div>
+      <div class="s-item">
+        <span class="val">Nationalité roumaine</span>
+        <span class="lbl">Nationalité</span>
+      </div>
+    </div>
+
+    <div class="s-section">
+      <div class="s-label">Langues</div>
+      <div class="lang-row">
+        <div class="lang-entry">
+          <div class="lang-top"><span class="lang-name">🇷🇴 Roumain</span><span class="lang-lvl">C1</span></div>
+          <div class="bar-bg"><div class="bar-fill" style="width:88%"></div></div>
+        </div>
+        <div class="lang-entry">
+          <div class="lang-top"><span class="lang-name">🇫🇷 Français</span><span class="lang-lvl">C1</span></div>
+          <div class="bar-bg"><div class="bar-fill" style="width:88%"></div></div>
+        </div>
+        <div class="lang-entry">
+          <div class="lang-top"><span class="lang-name">🇬🇧 Anglais</span><span class="lang-lvl">B2</span></div>
+          <div class="bar-bg"><div class="bar-fill" style="width:70%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="s-section">
+      <div class="s-label">Compétences</div>
+      <div class="chips">
+        <span class="chip">Ophtalmologie</span>
+        <span class="chip">Diagnostic</span>
+        <span class="chip">Équipement médical</span>
+        <span class="chip">Communication</span>
+        <span class="chip">Documentation</span>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <section>
+      <div class="section-title">Profil</div>
+      <p class="about-text">Lycéen passionné par la médecine oculaire, fasciné par la combinaison de <strong>précision chirurgicale</strong>, de technologie de pointe et de l'impact humain profond qu'offre l'ophtalmologie. Motivé, rigoureux et curieux, je souhaite construire une carrière dans cette spécialité médicale.</p>
+    </section>
+
+    <section>
+      <div class="section-title">Formation</div>
+      <div class="edu-item">
+        <div class="edu-title">Lycée Sainte-Clotilde</div>
+        <div class="edu-school">Strasbourg, 67000</div>
+        <div class="edu-detail">Lycée général — en cours</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">Expériences</div>
+      <div class="timeline">
+        <div class="t-item">
+          <div class="t-date">Juin 2026</div>
+          <div class="t-body">
+            <div class="t-title">Stage — Cabinet d'ophtalmologie</div>
+            <div class="t-org">Cluj-Napoca, Roumanie</div>
+            <div class="t-desc">Observation des consultations, familiarisation avec les appareils de diagnostic (fond d'œil, tonométrie, réfractomètre) et le flux de travail d'un ophtalmologiste. Présentation orale du bilan de stage.</div>
+          </div>
+        </div>
+        <div class="t-item">
+          <div class="t-date">Mars 2026</div>
+          <div class="t-body">
+            <div class="t-title">Présentation — « Le métier d'ophtalmologiste »</div>
+            <div class="t-org">Projet personnel</div>
+            <div class="t-desc">Recherche approfondie et présentation sur le rôle, les responsabilités et les défis du métier d'ophtalmologiste — de la formation médicale à la relation avec le patient.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">Qualités</div>
+      <div class="qual-chips">
+        <span class="qual-chip">Responsable</span>
+        <span class="qual-chip">Discipliné</span>
+        <span class="qual-chip">Attention aux détails</span>
+        <span class="qual-chip">Curieux</span>
+        <span class="qual-chip">Organisé</span>
+      </div>
+    </section>
+
+    <div class="cv-footer">
+      iacob-mardari-cv.vercel.app &nbsp;·&nbsp; mardariiacob2@gmail.com &nbsp;·&nbsp; +33 6 95 90 63 49
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>
